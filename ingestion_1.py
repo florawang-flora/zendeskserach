@@ -4,10 +4,10 @@ import pandas as pd
 class Ingestion:
     def __init__(self):
         self.base_path = "/Users/mac/PycharmProjects/Zendesk_research/data_source/"
-        self.data_source = [ 'organizations.json', 'tickets.json', 'users.json']
+        self.data_source = ['organizations.json', 'tickets.json', 'users.json']
 
 
-        self.compulsory_rules = {
+        self.compulsory_rules={
             "tickets.json": ["_id", "url", "external_id", "submitter_id", "assignee_id", "organization_id"],
             "users.json": ["_id", "external_id", "organization_id"],
             "organizations.json": ["_id", "external_id"]
@@ -28,6 +28,7 @@ class Ingestion:
     def ingestion_run(self):
         print('===run start===')
         data = self.get_load_all_json()
+        all_dataframes = {}
         for file_name, records in data.items():
             # print(f'Here is the file name {file_name}')
             # print(f'Here is the records {records}')
@@ -44,8 +45,9 @@ class Ingestion:
             clean_records = self.get_clean_json(valid_rec,file_name)
             #print(clean_records)
             df = self.get_generate_dataframe(clean_records,file_name)
-            #print(df)
-        return df
+            all_dataframes[file_name] = df
+        print(all_dataframes)
+        return all_dataframes
 
     def get_load_all_json(self):
         return self.__load_all_json()
