@@ -5,6 +5,7 @@
 # for the next file -> change to the dataframe.
 
 def clean_json(records, required_fields):
+    #         clean_records = clean_json(valid_rec, schema_fields)
     clean_records=[]
     """
     :param records:list[dict]
