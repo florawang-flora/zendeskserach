@@ -1,9 +1,9 @@
 import pandas as pd
-from ingestion_1 import Ingestion
 class Curation:
-# this part will make sure ,the task will do when we check the dataframe, it also will generate out another dataframe information:
-# also at the same time
-# 3 DATA FILE GENREATE TO 1 SQL
+    # step1: check the dataframe format
+    # step2: apply the business logic to dataframes
+    # step3: generate database format
+
     def __init__(self,dict_of_dataframe):
         self.dict_of_dataframe = dict_of_dataframe
         self.file_name  = ['organizations.json', 'users.json','tickets.json']
@@ -50,16 +50,16 @@ class Curation:
     def apply_business_logic(self):
         #https://pandas.pydata.org/docs/user_guide/merging.html#dataframe-join
         # rename the column name
-        ###... I'll do it now .
-        users_ticket = self.df_users.join(self.df_tickets)
-        print(users_ticket.dtypes)
-
+        organization_df = self.df_organization.rename( columns = {'_id':'organization_id'})
+        self.df_organization = self.dict_of_dataframe['organizations.json']
+        self.df_users = self.dict_of_dataframe['users.json']
+        self.df_tickets = self.dict_of_dataframe['tickets.json']
 
 
 
 
 if __name__=="__main__":
-    ingestion_data = Ingestion()
+    ingestion_data = Ingestion('/Users/mac/PycharmProjects/Zendesk_research/config.yml')
     # generate multipe dataframe
     dfs = ingestion_data.ingestion_run()
     print(type(dfs))

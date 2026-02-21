@@ -18,4 +18,4 @@ def load_json(path):
     if not isinstance(data, list):
         raise ValueError(f"Expected a JSON array, however: {type(data)}")
     return data
-print(load_json("../data_source/users.json"))
+print(load_json("../src/data_source/users.json"))

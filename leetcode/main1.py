@@ -1,8 +1,8 @@
 print('file start running ')
-from ingestion.load_json import load_json
-from ingestion.validate_json import validate_records_simple
-from ingestion.clean_json import clean_json
-from ingestion.generate_dataframe import generate_dataframe
+from src.ingestion import validate_records_simple
+from leetcode.previous_work import clean_json
+from leetcode import generate_dataframe, load_json
+
 
 def run_pipeline():
     # load the data

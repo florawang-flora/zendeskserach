@@ -1,68 +1,40 @@
 import json
 import os
 import pandas as pd
+import yaml
+
 class Ingestion:
-    def __init__(self):
-        self.base_path = "/Users/mac/PycharmProjects/Zendesk_research/data_source/"
-        self.data_source = ['organizations.json', 'tickets.json', 'users.json']
-
-
-        self.compulsory_rules={
-            "tickets.json": ["_id", "url", "external_id", "submitter_id", "assignee_id", "organization_id"],
-            "users.json": ["_id", "external_id", "organization_id"],
-            "organizations.json": ["_id", "external_id"]
-        }
-        # clean  setup
-        self.schema_rules = {
-            "tickets.json": ["_id", "url", "external_id", "created_at", "type", "subject", "description",
-                             "priority", "status", "submitter_id", "assignee_id", "organization_id",
-                             "tags", "has_incidents", "due_at", "via"],
-            "users.json": ["_id", "external_id", "name", "alias", "created_at", "active", "verified",
-                           "shared", "locale", "timezone", "last_login_at", "email", "phone", "signature",
-                           "organization_id", "tags", "suspended", "role"],
-
-            "organizations.json": ["_id", "url", "external_id", "name", "domain_name", "created_at", "details",
-                                   "shared_tickets", "tags"]
-        }
+    def __init__(self,config_path = 'config.yml'):
+        with open(config_path, "r") as file:
+            config= yaml.safe_load(file)
+            self.base_path = config['base_path']
+            self.data_source = config['data_source']
+            self.compulsory_rules = config['compulsory_rules']
+            self.schema_rules = config['schema_rules']
 
     def ingestion_run(self):
         print('===run start===')
-        data = self.get_load_all_json()
+        data = self._load_all_json()
         all_dataframes = {}
         for file_name, records in data.items():
             # print(f'Here is the file name {file_name}')
             # print(f'Here is the records {records}')
             required_fields = self.compulsory_rules
             # print(f'here is the required_fields: {required_fields}')
-
-            valid_rec, errors = self.get_valid_records(
+            valid_rec, errors = self._valid_records(
                 records=records,
                 required_fields=required_fields,
                 file_name=file_name
             )
-
-
-            clean_records = self.get_clean_json(valid_rec,file_name)
+            clean_records = self._clean_json(valid_rec,file_name)
             #print(clean_records)
-            df = self.get_generate_dataframe(clean_records,file_name)
+            df = self._generate_dataframe(clean_records,file_name)
             all_dataframes[file_name] = df
         print(all_dataframes)
         return all_dataframes
+    # no meaning, private function and primary function.
 
-    def get_load_all_json(self):
-        return self.__load_all_json()
-
-    def get_valid_records(self,records, required_fields, file_name ):
-        return self.__valid_records(records, required_fields, file_name)
-
-    def get_clean_json(self,valid_records,file_name):
-        return self.__clean_json(valid_records, file_name)
-
-
-    def get_generate_dataframe(self,clean_list_records, file_name):
-        return self.__generate_dataframe(clean_list_records,file_name)
-
-    def __load_all_json(self):
+    def _load_all_json(self):
         # file system check
         all_data = {}
         for file_name in self.data_source:
@@ -82,7 +54,7 @@ class Ingestion:
                 all_data[file_name] = None
                 print("Loaded keys:", all_data.keys())
         return all_data
-    def __valid_records(self,records, required_fields, file_name):
+    def _valid_records(self,records, required_fields, file_name):
         # records will be like =:  {'_id': 101, 'url': 'http:/..'}  which is a dict
         clean = []
         errors = []
@@ -117,7 +89,7 @@ class Ingestion:
 
         return clean, errors
 
-    def __clean_json(self,valid_records,file_name):
+    def _clean_json(self,valid_records,file_name):
         """
            :param records:list[dict]
            :param required_fields: str
@@ -141,15 +113,12 @@ class Ingestion:
         print(f"clean_list_record data type is {type(clean_list_records)} in the {file_name}")
         return clean_list_records
 
-    def __generate_dataframe(self, clean_list_records, file_name):
+    def _generate_dataframe(self, clean_list_records, file_name):
         print("Generating dataframe...")
         dataframe = pd.DataFrame(clean_list_records)
         dataframe.head()
         print(f"Have generated dataframe: { dataframe.shape[0]} rows,{dataframe.shape[1]} columns for the {file_name}")
         return dataframe
-
-
-
 
 
 
