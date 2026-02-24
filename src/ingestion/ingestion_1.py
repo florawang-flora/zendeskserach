@@ -1,13 +1,20 @@
 import json
 import os
 import pandas as pd
-
+from utils.load_config import load_conf
 class Ingestion:
     def __init__(self,base_path, data_source, compulsory_rules, schema_rules):
         self._base_path = base_path
         self._data_source = data_source
         self._compulsory_rules = compulsory_rules
         self._schema_rules = schema_rules
+    @property
+    def get_compulsory_rules(self):
+        return self._compulsory_rules
+    @property
+    def get_schema_rules(self):
+        return self._schema_rules
+
     def ingestion_run(self):
         print('===run start===')
         data = self._load_all_json()
@@ -129,6 +136,18 @@ class Ingestion:
 
 
 #if __name__ == '__main__':
+#    config = load_conf()
+#    base_path = config['base_path']
+#    data_source = config['data_source']
+#    compulsory_rules = config['compulsory_rules']
+#    schema_rules = config['schema_rules']
+#    file_names = config['data_source']
+#
+#
+#
+#
+#    obj = Ingestion(base_path,data_source,compulsory_rules,schema_rules)
+#    print(obj.get_compulsory_rules)
 #    base_path ="/Users/mac/PycharmProjects/Zendesk_research/data_source/"
 #    ingestion_data = Ingestion(base_path)
 #    data = ingestion_data.get_load_all_json()

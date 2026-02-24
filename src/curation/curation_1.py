@@ -9,6 +9,13 @@ class Curation:
         self._file_names = file_names
         self._dict_of_dataframe = dict_of_dataframe
 
+    @property
+    def get_file_names(self):
+        return self._file_names
+    @property
+    def get_dict_of_dataframes(self):
+        return self.get_dict_of_dataframes
+
     def _check_dataframes_format(self):
         # check the dataframe exists and types
         # check for the gen
