@@ -1,0 +1,28 @@
+base_path: "/Users/mac/PycharmProjects/Zendesk_research/src/data_source/"
+
+data_source:
+  - organizations.json
+  - tickets.json
+  - users.json
+
+compulsory_rules:
+  tickets.json: ["_id", "url", "external_id", "submitter_id", "assignee_id", "organization_id"]
+  users.json: ["_id", "external_id", "organization_id"]
+  organizations.json: ["_id", "external_id"]
+
+
+schema_rules:
+  tickets.json: ["_id", "url", "external_id", "created_at", "type", "subject", "description",
+                             "priority", "status", "submitter_id", "assignee_id", "organization_id",
+                             "tags", "has_incidents", "due_at", "via"]
+
+  users.json: ["_id", "external_id", "name", "alias", "created_at", "active", "verified",
+                           "shared", "locale", "timezone", "last_login_at", "email", "phone", "signature",
+                           "organization_id", "tags", "suspended", "role"]
+
+  organizations.json: ["_id", "url", "external_id", "name", "domain_name", "created_at", "details",
+                                   "shared_tickets", "tags"]
+
+
+database:
+  url: 'sqlite:///zendesk.db'
