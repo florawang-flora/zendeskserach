@@ -1,17 +1,13 @@
 import json
 import os
 import pandas as pd
-import yaml
 
 class Ingestion:
-    def __init__(self,config_path = 'config.yml'):
-        with open(config_path, "r") as file:
-            config= yaml.safe_load(file)
-            self.base_path = config['base_path']
-            self.data_source = config['data_source']
-            self.compulsory_rules = config['compulsory_rules']
-            self.schema_rules = config['schema_rules']
-
+    def __init__(self,base_path, data_source, compulsory_rules, schema_rules):
+        self._base_path = base_path
+        self._data_source = data_source
+        self._compulsory_rules = compulsory_rules
+        self._schema_rules = schema_rules
     def ingestion_run(self):
         print('===run start===')
         data = self._load_all_json()
@@ -19,7 +15,7 @@ class Ingestion:
         for file_name, records in data.items():
             # print(f'Here is the file name {file_name}')
             # print(f'Here is the records {records}')
-            required_fields = self.compulsory_rules
+            required_fields = self._compulsory_rules
             # print(f'here is the required_fields: {required_fields}')
             valid_rec, errors = self._valid_records(
                 records=records,
@@ -37,8 +33,8 @@ class Ingestion:
     def _load_all_json(self):
         # file system check
         all_data = {}
-        for file_name in self.data_source:
-            file_path = os.path.join(self.base_path, file_name)
+        for file_name in self._data_source:
+            file_path = os.path.join(self._base_path, file_name)
             print(f'Trying to load data file {file_path}')
             if not os.path.exists(file_path):
                 print(f"We didn't load the file: {file_name}")
@@ -95,8 +91,7 @@ class Ingestion:
            :param required_fields: str
            :return: list[dict]
            """
-
-        schema_fields = self.schema_rules[file_name]
+        schema_fields = self._schema_rules[file_name]
         new_dict = {}
         clean_list_records = []
         #print('here is the schema fields',schema_fields)

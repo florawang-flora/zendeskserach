@@ -5,22 +5,15 @@ class Curation:
     # step2: apply the business logic to dataframes
     # step3: generate database format
 
-    def __init__(self, dict_of_dataframe):
-        with open("/Users/mac/PycharmProjects/Zendesk_research/config.yml", "r") as file:
-            config = yaml.safe_load(file)
-            file_names = config['data_source']
-
-        self.file_names = file_names
-        self.dict_of_dataframe = dict_of_dataframe
-        #self.users = dict_of_dataframe.get('users.json')
-        #self.tickets = dict_of_dataframe.get('tickets.json')
-        #self.orgs = dict_of_dataframe.get('organizations.json')
+    def __init__(self, file_names, dict_of_dataframe):
+        self._file_names = file_names
+        self._dict_of_dataframe = dict_of_dataframe
 
     def _check_dataframes_format(self):
         # check the dataframe exists and types
         # check for the gen
-        for file_name in self.file_names:
-            df = self.dict_of_dataframe.get(file_name)
+        for file_name in self._file_names:
+            df = self._dict_of_dataframe.get(file_name)
             if df is None:
                 raise ValueError(f'Missing dataframe: {file_name}')
             if not isinstance(df, pd.DataFrame):
@@ -54,9 +47,9 @@ class Curation:
         tickets.organization_id -> orgs._id
 
         """
-        tickets_df = self.dict_of_dataframe.get('tickets.json')
-        users_df = self.dict_of_dataframe.get('users.json')
-        orgs_df = self.dict_of_dataframe.get('organizations.json')
+        tickets_df = self._dict_of_dataframe.get('tickets.json')
+        users_df = self._dict_of_dataframe.get('users.json')
+        orgs_df = self._dict_of_dataframe.get('organizations.json')
 
         tickets_df = tickets_df.rename(columns = {
             "_id": "tickets_id",

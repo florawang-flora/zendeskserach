@@ -1,4 +1,4 @@
-base_path: "/Users/mac/PycharmProjects/Zendesk_research/src/data_source/"
+base_path: "src/data_source/"
 
 data_source:
   - organizations.json

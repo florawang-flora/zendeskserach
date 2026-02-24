@@ -1,16 +1,21 @@
 from src.ingestion.ingestion_1 import Ingestion
 from src.curation.curation_1 import Curation
 from src.database.database import SQLDatabase
+from utils.load_config import load_conf
 import yaml
 def main():
-    config_path = "/Users/mac/PycharmProjects/Zendesk_research/config.yml"
-    with open(config_path,'r') as file:
-        config = yaml.safe_load(file)
-    print(config)
-    ingestion_data = Ingestion(config_path='config.yml')
+    config = load_conf()
+    base_path = config['base_path']
+    data_source = config['data_source']
+    compulsory_rules = config['compulsory_rules']
+    schema_rules = config['schema_rules']
+    file_names = config['data_source']
+    ingestion_data = Ingestion(base_path, data_source, compulsory_rules,schema_rules)
     # generate multipe dataframe
     dfs = ingestion_data.ingestion_run()
-    curation = Curation(dfs)
+
+    curation = Curation(file_names,dfs)
+
     curation_dataset= curation.generate_database_format()
     #print(curation_dataset)
     db_url = config['database']['url']
