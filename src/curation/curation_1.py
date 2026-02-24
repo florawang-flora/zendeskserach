@@ -115,7 +115,7 @@ class Curation:
             }
         )
         #print(orgs_df.head())
-
+        # change their.
         merge_df = users_df.merge(tickets_df.rename(
             columns= {'tickets_submitter_id': "users_id"}
         ),
