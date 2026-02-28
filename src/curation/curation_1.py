@@ -9,12 +9,20 @@ class Curation:
         self._file_names = file_names
         self._dict_of_dataframe = dict_of_dataframe
 
-    @property
-    def get_file_names(self):
-        return self._file_names
-    @property
-    def get_dict_of_dataframes(self):
-        return self.get_dict_of_dataframes
+    #@property
+    #def get_file_names(self):
+    #    return self._file_names
+    #@property
+    #def get_dict_of_dataframes(self):
+    #    return self.get_dict_of_dataframes
+
+    def generate_curation_dataset(self):
+        # steps: check the dataframes format and rename the column name
+        # these data frame is ready to go into the database.
+        self._check_dataframes_format()
+        # generate_database_format
+        self._apply_business_logic()
+        return self._apply_business_logic()
 
     def _check_dataframes_format(self):
         # check the dataframe exists and types
@@ -54,9 +62,9 @@ class Curation:
         tickets.organization_id -> orgs._id
 
         """
-        tickets_df = self._dict_of_dataframe.get('tickets.json')
-        users_df = self._dict_of_dataframe.get('users.json')
-        orgs_df = self._dict_of_dataframe.get('organizations.json')
+        tickets_df = self._dict_of_dataframe.get('tickets.json').copy()
+        users_df = self._dict_of_dataframe.get('users.json').copy()
+        orgs_df = self._dict_of_dataframe.get('organizations.json').copy()
 
         tickets_df = tickets_df.rename(columns = {
             "_id": "tickets_id",
@@ -114,24 +122,22 @@ class Curation:
             "tags": "org_tags"
             }
         )
+
+        return {'tickets':tickets_df,
+                'users':users_df,
+                'organizations':orgs_df
+                }
+
+
         #print(orgs_df.head())
         # change their.
-        merge_df = users_df.merge(tickets_df.rename(
-            columns= {'tickets_submitter_id': "users_id"}
-        ),
-            how= 'left',
-            on = 'users_id')
-
-        merge_df2 = merge_df.merge(orgs_df,
-                                   how ='left',
-                                   on = 'organization_id')
-
-        print(f" here it is columns in the database format{list(merge_df2.columns)}")
-
-        return merge_df2
-    def generate_database_format(self):
-        # steps: check the dataframes format and apply the business logic
-        self._check_dataframes_format()
-        # generate_database_format
-        self._apply_business_logic()
-        return self._apply_business_logic()
+        #merge_df = users_df.merge(tickets_df.rename(
+        #    columns= {'tickets_submitter_id': "users_id"}
+        #),
+        #    how= 'left',
+        #    on = 'users_id')
+        #merge_df2 = merge_df.merge(orgs_df,
+        #                           how ='left',
+        #                           on = 'organization_id')
+        #print(f" here it is columns in the database format{list(merge_df2.columns)}")
+        #return merge_df2
