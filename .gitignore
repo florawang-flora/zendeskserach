@@ -2,4 +2,4 @@
 src/.DS_Store
 *.xml
 *.iml
-.db
+*.db
