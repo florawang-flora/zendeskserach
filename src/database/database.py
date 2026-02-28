@@ -25,6 +25,7 @@ class SQLDatabase:
 
     # second function is to read the query and to
     def read_query(self, query):
+        # the read_query function is to support the CLI function
         return pd.read_sql(query, self.engine)
 
 
