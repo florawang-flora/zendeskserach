@@ -188,6 +188,35 @@ class CLI:
             WHERE t.{search_col} = :search_val
             """
             query_results = self._db.read_query(query, params={"search_val": search_val})
+
+            prefix = ('tickets_', 'users_name', 'organization_name')
+            ticket_cols = [c for c in query_results.columns if c.startswith(prefix)]
+            ticket_df = query_results[user_cols]
+
+            # clean_users_df
+            clean_ticket_df = users_df.groupby('ticket_id', as_index=False).agg(
+                {
+                    "tickets_url" : "first",
+                    "tickets_external_id" : "first",
+                    "tickets_created_at" : "first",
+                    "tickets_type": "first",
+                    "tickets_subject": "first",
+                    "tickets_description": "first",
+                    "tickets_priority": "first",
+                    "tickets_status": "first",
+                    "tickets_submitter_id" : 'first',
+                    "tickets_assignee_id" : "first",
+                    "tickets_organization_id" : "first",
+                    "tickets_tags": "first",
+                    "tickets_has_incidents" :"first",
+                    "ickets_due_at": "first",
+                    "tickets_via": "first"
+
+                }
+            )
+            for index, row in clean_ticket_df.iterrows():
+                print(row.to_string())
+            # print(clean_users_df)
         elif table_name == 'organizations':
             query = f"""
             SELECT 
@@ -269,9 +298,9 @@ class CLI:
         for field in self._search_fields['tickets']:
             print(field)
         print("\n-------------------------")
-        print("Search Tickets with")
-        for field in self._search_fields['organizations']:
-            print(field)
+        #print("Search Tickets with")
+        #for field in self._search_fields['organizations']:
+        #    print(field)
 
 
 
