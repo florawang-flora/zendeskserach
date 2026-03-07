@@ -24,60 +24,12 @@ class SQLDatabase:
         print(f"table {table_name} have written in the database. {df_clean.shape}")
 
     # second function is to read the query and to
-    def read_query(self, query):
-        # the read_query function is to support the CLI function
-        return pd.read_sql(query, self.engine)
-
-
-    ## step2: prepare 3 tables for the cli table
-    def _search_organization_table(self):
-        return '''
-        DROP TABLE IF EXISTS organization_cli;
-        CREATE TABLE organization_cli AS
-        SELECT 
-            o.*, 
-            u.*,
-            t.*
-        FROM organizations AS o
-        LEFT JOIN users AS u
-            ON u.users_id = o.organization_id
-        LEFT JOIN tickets AS t
-            ON t.tickets_submitter_id = u.users_id;
-        '''
-
-
-    def _search_ticket_table(self):
-        return '''
-        DROP TABLE IF EXISTS ticket_cli;
-        CREATE TABLE ticket_cli AS 
-        SELECT 
-            t.*, 
-            u.*, 
-            o.*
-        FROM tickets as t
-        LEFT JOIN users AS u
-            ON t.tickets_submitter_id = u.users_id
-        LEFT JOIN organizations as o
-            ON o.organization_id = u.users_id ;
-        '''
-
-
-    def _search_user_table(self):
-        return '''
-        DROP TABLE IF EXISTS user_cli;
-        CREATE TABLE user_cli AS 
-        SELECT 
-            u.*,
-            t.*,
-            o.*
-        FROM users AS u 
-        LEFT JOIN tickets AS t
-            ON u.users_id = t.tickets_submitter_id 
-        LEFT JOIN organizations AS o 
-            ON o.organization_id = u.users_id;
-        '''
-        return user_sql
-    def _execute_sql_script(self,sql):
+    #def read_query(self, query):
+    #    # the read_query function is to support the CLI function
+    #    return pd.read_sql(query, self.engine)
+        # second function is to read the query and to
+    def _execute_sql_script(self, sql):
+        # because previous we use the insert into function , so engine.begin() maybe good because we have the auto submit
         with self.engine.begin() as conn:
             for execute_line in sql.split(';'):
                 execute_line = execute_line.strip()
@@ -85,11 +37,66 @@ class SQLDatabase:
                 if execute_line:
                     conn.execute(text(execute_line))
 
-    def generate_cli_datasets(self):
-        self._execute_sql_script(self._search_organization_table())
-        self._execute_sql_script(self._search_ticket_table())
-        self._execute_sql_script(self._search_user_table())
-        print("CLI tables have been successfully generated!")
+    def read_query(self, query: str, params: dict|None = None) -> pd.DataFrame:
+        # the read_query function is to support the CLI function
+        with self.engine.connect() as conn:
+            return pd.read_sql(text(query), conn, params=params)
+
+
+    ## step2: prepare 3 tables for the cli table
+    #def _search_organization_table(self):
+    #    return '''
+    #    DROP TABLE IF EXISTS organization_cli;
+    #    CREATE TABLE organization_cli AS
+    #    SELECT
+    #        o.*,
+    #        u.*,
+    #        t.*
+    #    FROM organizations AS o
+    #    LEFT JOIN users AS u
+    #        ON u.users_id = o.organization_id
+    #    LEFT JOIN tickets AS t
+    #        ON t.tickets_submitter_id = u.users_id;
+    #    '''
+#
+#
+    #def _search_ticket_table(self):
+    #    return '''
+    #    DROP TABLE IF EXISTS ticket_cli;
+    #    CREATE TABLE ticket_cli AS
+    #    SELECT
+    #        t.*,
+    #        u.*,
+    #        o.*
+    #    FROM tickets as t
+    #    LEFT JOIN users AS u
+    #        ON t.tickets_submitter_id = u.users_id
+    #    LEFT JOIN organizations as o
+    #        ON o.organization_id = u.users_id ;
+    #    '''
+#
+#
+    #def _search_user_table(self):
+    #    return '''
+    #    DROP TABLE IF EXISTS user_cli;
+    #    CREATE TABLE user_cli AS
+    #    SELECT
+    #        u.*,
+    #        t.*,
+    #        o.*
+    #    FROM users AS u
+    #    LEFT JOIN tickets AS t
+    #        ON u.users_id = t.tickets_submitter_id
+    #    LEFT JOIN organizations AS o
+    #        ON o.organization_id = u.users_id;
+    #    '''
+
+
+    #def generate_cli_datasets(self):
+        #self._execute_sql_script(self._search_organization_table())
+        #self._execute_sql_script(self._search_ticket_table())
+        #self._execute_sql_script(self._search_user_table())
+        #print("CLI tables have been successfully generated!")
 
 
 

@@ -3,7 +3,9 @@ import pandas as pd
 from src.ingestion.ingestion_1 import Ingestion
 from src.curation.curation_1 import Curation
 from src.database.database import SQLDatabase
+from src.cli.cli_final import CLI
 from utils.load_config import load_conf
+
 import yaml
 def main():
     # Configuration from the yaml file, located in the utils folder.
@@ -15,6 +17,8 @@ def main():
     schema_rules = config['schema_rules']
     file_names = config['data_source']
     db_url = config['database']['url']
+    entity_map = config['entity_map']
+    search_fields = config['search_fields']
    # ingest data.
     ingestion_data = Ingestion(base_path, data_source, compulsory_rules,schema_rules)
     #  # eg. {ticket1.json : df1, organization1.json : df2 }
@@ -28,13 +32,23 @@ def main():
     # add the result to database and then generate 3 databases.
     db = SQLDatabase(db_url, curation_dataset)
     db.generate_database_data(curation_dataset)
+
+    cli = CLI(db, entity_map, search_fields)
+    cli.run()
+
+    #df = db.read_query("select * from users where _id=  :id", {"id": 4})
+    #print(df)
     # generate  cli_dataframe
-    db.generate_cli_datasets()
+    #db.generate_cli_datasets()
+
+    #object = CLI(db)
+    #object.search_flow()
+
+    # add the
 
 
 
 
-    results = db.read_query("SELECT * FROM organization_cli LIMIT 10")
-    print(results)
+
 if __name__ == "__main__":
     main()

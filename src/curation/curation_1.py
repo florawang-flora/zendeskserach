@@ -66,62 +66,62 @@ class Curation:
         users_df = self._dict_of_dataframe.get('users.json').copy()
         orgs_df = self._dict_of_dataframe.get('organizations.json').copy()
 
-        tickets_df = tickets_df.rename(columns = {
-            "_id": "tickets_id",
-            "url": "tickets_url",
-            "external_id": "tickets_external_id",
-            "created_at": "tickets_created_at",
-            "type": "tickets_type",
-            "subject": "tickets_subject",
-            "description": "tickets_description",
-            "priority": "tickets_priority",
-            "status": "tickets_status",
-            "submitter_id": "tickets_submitter_id",
-            "assignee_id": "tickets_assignee_id",
-            "organization_id": "tickets_organization_id",
-            "tags": "tickets_tags",
-            "has_incidents": "tickets_has_incidents",
-            "due_at": "tickets_due_at",
-            "via": "tickets_via"
-                }
-        )
+        #tickets_df = tickets_df.rename(columns = {
+        #    "_id": "tickets_id",
+        #    "url": "tickets_url",
+        #    "external_id": "tickets_external_id",
+        #    "created_at": "tickets_created_at",
+        #    "type": "tickets_type",
+        #    "subject": "tickets_subject",
+        #    "description": "tickets_description",
+        #    "priority": "tickets_priority",
+        #    "status": "tickets_status",
+        #    "submitter_id": "tickets_submitter_id",
+        #    "assignee_id": "tickets_assignee_id",
+        #    "organization_id": "tickets_organization_id",
+        #    "tags": "tickets_tags",
+        #    "has_incidents": "tickets_has_incidents",
+        #    "due_at": "tickets_due_at",
+        #    "via": "tickets_via"
+        #        }
+        #)
 
-        users_df = users_df.rename( columns = {
-            "_id": "users_id",
-            "url": "users_url",
-            "external_id": "users_external_id",
-            "name": "users_name",
-            "alias": "users_alias",
-            "created_at": "users_created_at",
-            "active": "users_active",
-            "verified": "users_verified",
-            "shared": "users_shared",
-            "locale": "users_locale",
-            "timezone": "users_timezone",
-            "last_login_at": "users_last_login_at",
-            "email": "users_email",
-            "phone": "users_phone",
-            "signature": "users_signature",
-            "organization_id": "organization_id",
-            "tags": "users_tag",
-            "suspended": "users_suspended",
-            "role": "users_role"
-            }
-        )
+        #users_df = users_df.rename( columns = {
+        #    "_id": "users_id",
+        #    "url": "users_url",
+        #    "external_id": "users_external_id",
+        #    "name": "users_name",
+        #    "alias": "users_alias",
+        #    "created_at": "users_created_at",
+        #    "active": "users_active",
+        #    "verified": "users_verified",
+        #    "shared": "users_shared",
+        #    "locale": "users_locale",
+        #    "timezone": "users_timezone",
+        #    "last_login_at": "users_last_login_at",
+        #    "email": "users_email",
+        #    "phone": "users_phone",
+        #    "signature": "users_signature",
+        #    "organization_id": "organization_id",
+        #    "tags": "users_tag",
+        #    "suspended": "users_suspended",
+        #    "role": "users_role"
+        #    }
+        #)
         #print(f"users df {users_df.head()}")
 
-        orgs_df = orgs_df.rename(columns = {
-            "_id": "organization_id",
-            "url": "org_url",
-            "external_id": "org_external_id",
-            "name": "organization_name",
-            "domain_names":"org_domain",
-            "created_at": "org_created_at",
-            "details": "org_details",
-            "shared_tickets": "org_shared_tickets",
-            "tags": "org_tags"
-            }
-        )
+        #orgs_df = orgs_df.rename(columns = {
+        #    "_id": "organization_id",
+        #    "url": "org_url",
+        #    "external_id": "org_external_id",
+        #    "name": "organization_name",
+        #    "domain_names":"org_domain",
+        #    "created_at": "org_created_at",
+        #    "details": "org_details",
+        #    "shared_tickets": "org_shared_tickets",
+        #    "tags": "org_tags"
+        #    }
+        #)
 
         return {'tickets':tickets_df,
                 'users':users_df,
