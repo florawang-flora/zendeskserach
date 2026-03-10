@@ -1,7 +1,6 @@
 import json
 import os
 import pandas as pd
-from utils.load_config import load_conf
 class Ingestion:
     def __init__(self,base_path, data_source, compulsory_rules, schema_rules):
         self._base_path = base_path
