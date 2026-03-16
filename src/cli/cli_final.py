@@ -33,9 +33,36 @@ class CLI:
         print("\nSelect 1) Users or 2) Tickets or 3) Organizations")
         # consider there is 1 option will happen, what if customer enter 1) rather than 1 , also, what if they enter symbol, and what if they write down the string. that will be great.
         choice_num= input("> ").strip()
+        if choice_num not in ["1" ,"2","3" ]:
+            print('please enter 1,or 2, or 3')
+            return
         table_name = self._entity_map[choice_num]
         print('Enter Search term')
+
         search_col = input("> ").strip()
+
+        allowed_fields = {
+            "tickets": [
+                "_id", "url", "external_id", "created_at", "type", "subject",
+                "description", "priority", "status", "submitter_id",
+                "assignee_id", "organization_id", "tags", "has_incidents",
+                "due_at", "via"
+            ],
+            "users": [
+                "_id", "url", "external_id", "name", "alias", "created_at",
+                "active", "verified", "shared", "locale", "timezone",
+                "last_login_at", "email", "phone", "signature",
+                "organization_id", "tags", "suspended", "role"
+            ],
+            "organizations": [
+                "_id", "url", "external_id", "name", "domain_names",
+                "created_at", "details", "shared_tickets", "tags"
+            ]
+        }
+        if search_col not in allowed_fields[table_name]:
+            print(f"Invalid search field: {search_col}")
+            print("Please choose a valid field.")
+            return
         print('Enter search value')
         search_val = input("> ").strip()
 
@@ -97,6 +124,9 @@ class CLI:
                     WHERE u.{search_col} = :search_val;
                """
                 query_results = self._db.read_query(query, params={"search_val": search_val})
+                if query_results.empty:
+                    print("No results found")
+                    return
                 prefix = ('users_', 'tickets_subject', 'organization_name')
                 user_cols = [c for c in query_results.columns if c.startswith(prefix)]
                 users_df = query_results[user_cols]
