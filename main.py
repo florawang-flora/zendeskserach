@@ -19,6 +19,8 @@ def main():
     db_url = config['database']['url']
     entity_map = config['entity_map']
     search_fields = config['search_fields']
+    allowed_fields = config['allowed_fields']
+    queries = config['queries']
    # ingest data.
     ingestion_data = Ingestion(base_path, data_source, compulsory_rules,schema_rules)
     #  # eg. {ticket1.json : df1, organization1.json : df2 }
@@ -33,19 +35,8 @@ def main():
     db = SQLDatabase(db_url, curation_dataset)
     db.generate_database_data(curation_dataset)
 
-    cli = CLI(db, entity_map, search_fields)
+    cli = CLI(db, entity_map, search_fields,allowed_fields, queries)
     cli.run()
-
-    #df = db.read_query("select * from users where _id=  :id", {"id": 4})
-    #print(df)
-    # generate  cli_dataframe
-    #db.generate_cli_datasets()
-
-    #object = CLI(db)
-    #object.search_flow()
-
-    # add the
-
 
 
 

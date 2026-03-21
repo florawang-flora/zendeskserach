@@ -68,12 +68,14 @@ class Ingestion:
                 print("Loaded keys:", all_data.keys())
         return all_data
     def _valid_records(self,records, required_fields, file_name):
+
         '''
         This function is to mainly to check whether the json data field format is looks structure,
         if it doesn't, we take it out. In addition, we add the ticket record information in the error
         list. For the item that we take it out, it will pop into the missing list so that we can manaual
         clean it in the future.
         '''
+
         # records will be like =:  {'_id': 101, 'url': 'http:/..'}  which is a dict
         # return the clean data.
         clean = []
@@ -146,58 +148,6 @@ class Ingestion:
         dataframe.head()
         print(f"Have generated dataframe: { dataframe.shape[0]} rows,{dataframe.shape[1]} columns for the {file_name}")
         return dataframe
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#if __name__ == '__main__':
-#    config = load_conf()
-#    base_path = config['base_path']
-#    data_source = config['data_source']
-#    compulsory_rules = config['compulsory_rules']
-#    schema_rules = config['schema_rules']
-#    file_names = config['data_source']
-#
-#
-#
-#
-#    obj = Ingestion(base_path,data_source,compulsory_rules,schema_rules)
-#    print(obj.get_compulsory_rules)
-#    base_path ="/Users/mac/PycharmProjects/Zendesk_research/data_source/"
-#    ingestion_data = Ingestion(base_path)
-#    data = ingestion_data.get_load_all_json()
-#
-#
-#    for file_name, records in data.items():
-#        #print(f'Here is the file name {file_name}')
-#        #print(f'Here is the records {records}')
-#        required_fields = ingestion_data.compulsory_rules
-#        #print(f'here is the required_fields: {required_fields}')
-#
-#
-#        valid_rec, errors = ingestion_data.get_valid_records(
-#            records=records,
-#            required_fields=required_fields,
-#            file_name=file_name
-#        )
-#
-#        clean_records = ingestion_data.get_clean_json(valid_rec)
-#
-#        df = ingestion_data.get_generate_dataframe(clean_records)
-#
-
-
-
 
 
 

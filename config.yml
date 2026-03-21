@@ -86,3 +86,116 @@ search_fields:
       "tags"
   ]
 
+
+allowed_fields :
+
+  "tickets": [
+      "_id",
+      "url",
+      "external_id",
+      "created_at",
+      "type",
+      "subject",
+      "description",
+      "priority",
+      "status",
+      "submitter_id",
+      "assignee_id",
+      "organization_id",
+      "tags",
+      "has_incidents",
+      "due_at",
+      "via"
+  ]
+  "users": [
+      "_id",
+      "url",
+      "external_id",
+      "name",
+      "alias",
+      "created_at",
+      "active",
+      "verified",
+      "shared",
+      "locale",
+      "timezone",
+      "last_login_at",
+      "email",
+      "phone",
+      "signature",
+      "organization_id",
+      "tags",
+      "suspended",
+      "role"
+  ]
+  "organizations": [
+      "_id",
+      "url",
+      "external_id",
+      "name",
+      "domain_names",
+      "created_at",
+      "details",
+      "shared_tickets",
+      "tags"
+  ]
+
+queries:
+  users: |     
+    SELECT 
+        u._id as users_id,
+        u.url as users_url,
+        u.external_id as users_external_id,
+        u.name as users_name,
+        u.alias as users_alias,
+        u.created_at as users_created_at,
+        u.active as users_active,
+        u.verified as users_verified,
+        u.shared as users_shared,
+        u.locale as users_locale,
+        u.timezone as users_timezone,
+        u.last_login_at as users_last_login_at,
+        u.email as users_email,
+        u.phone as users_phone,
+        u.signature as users_signature,
+        u.organization_id as organization_id,
+        u.tags as users_tag,
+        u.suspended as users_suspended,
+        u.role as users,
+        t._id as tickets_id,
+        t.url as tickets_url,
+        t.external_id as tickets_external_id,
+        t.created_at as tickets_created_at,
+        t.type as tickets_type,
+        t.subject as tickets_subject,
+        t.description as tickets_description,
+        t.priority as tickets_priority,
+        t.status as tickets_status,
+        t.submitter_id as tickets_submitter_id,
+        t.assignee_id as tickets_assignee_id,
+        t.organization_id as tickets_organization_id,
+        t.tags as tickets_tags,
+        t.has_incidents as tickets_has_incidents,
+        t.due_at as tickets_due_at,
+        t.via as ticket, 
+        o._id as organization_id,
+        o.url as org_url,
+        o.external_id as org_external_id,
+        o.name as organization_name,
+        o.domain_names as org_domain,
+        o.created_at as org_created_at,
+        o.details as org_details,
+        o.shared_tickets as org_shared_tickets,
+        o.tags as org_tags
+
+    FROM users AS u 
+    LEFT JOIN tickets AS t
+    ON u._id = t.submitter_id 
+    LEFT JOIN organizations AS o 
+    ON o._id = u.organization_id
+    WHERE u.{search_col} = :search_val
+
+
+
+
+    
